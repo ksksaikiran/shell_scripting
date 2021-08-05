@@ -1,0 +1,23 @@
+which $SHELL
+
+steps to install tomcat
+step1: Use any command line editors like vi,vim,nano,etc and create eith .sh extension
+step2: start every shell program with, #!/bin/bash as it is used to run the lines in the shell script. 
+It is called /bin/bash or interpreter line or shebang line.
+step3: place your commands in sequence or writr logic to execute your commands
+step4: execute the shell script using command: sh <filename.sh>
+	provide always some execution permissions chmod +x xyz.sh and then ./xyz or with complete path. If you give execute permissions it turns to green colour
+  
+  
+
+
+
+write the shell script and then add the location of shell script to system pre-defined paths
+free -m | awk 'NR==2{print $4}'
+free -m | awk 'NR==2{print $4,"MB(MegaBytes)"}'
+echo $PATH
+export PATH=${PATH}:/home/ec2-user/usercmds/bin if we try this in CLI it is temporary 
+vi ~/.bash_profile
+add the path to existing path with : 
+PATH=$PATH:$HOME/bin:</home/ec2-user/usercmds/bin>       like this
+source ~/.bash_profile
