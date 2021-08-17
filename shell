@@ -1,0 +1,245 @@
+
+
+
+Shell script is a file with group of commands that user writes on the command line, where he can execute all the commands with single file. 
+the extension for shell file is ".sh"
+Types of shells;
+/bin/sh
+/bin/bash
+/bin/csh
+/bin/ksh
+/bin/tcsh
+
+To find which shells is running: echo $SHELL    or which $SHELL
+
+launch a Virtual terminal are:
+
+ Press Ctrl+Alt+F1
+
+
+
+You can navigate between the 6 virtual terminals using the following command.
+
+Ctrl + Alt + F (1 to 6) key
+
+head -5 <filename>		To display top 5 in lines
+tail -5 <filename>      To display bottom 5 in lines
+head -5 <filename> | tail -3  it displays bottom 3 lines from what head fetched
+tail -5 <filename> | head -3  It displays top 3 lines from what tail fetched
+
+
+ Working with file permissions
+ Test True if
+	-e  file file exist
+	-f  file file exist and is a regular file
+	-d  file file exist and is a directory file
+	-r  file file exist and is a readable file
+	-w  file file exist and is a writable file
+	-x  file file exist and is a executable file
+	-s  file file exist and has size greater than zero bytes
+	-L  file file exist and is a symbolic link file
+	f1 –nt f2  f1 is newer than f2 (check date and time of creation)
+	f1 –ot f2  f1 is older than f2 (check date and time of creation)
+	f1 –et f2  f1 is linked f
+
+script to print Hello world:
+#!/bin/bash
+echo "Hello world"
+
+TEMPLATE
+#!/bin/bash
+echo "The file name you want to create: "
+read filename
+touch /home/ec2-user/shellexamples/$filename.sh
+echo "#AUTHOR: Saikiran" >> /home/ec2-user/shellexamples/$filename.sh
+echo "#DATE: `date`" >> /home/ec2-user/shellexamples/$filename.sh
+echo "#Greetings Hello..!" >> /home/ec2-user/shellexamples/$filename.sh
+echo "#Welcome TO Shell Scripting" >> /home/ec2-user/shellexamples/$filename.sh
+
+scirpt to compare two numbers:
+#!/bin/bash             
+echo "Enter the value of a: "
+read a
+echo "Enter the value of b: "
+read b
+if [ $a -ge $b ];then
+echo "A is greater or equal"
+elif [ $a -le $b ];then
+echo "B is greater or equal"
+fi
+
+==============================================
+HTTP SERVER INSTALLATION USING SHELL SCRIPT
+==============================================
+#!/bin/bash
+#HTTP SERVICE INSTALLATION ON REDHAT USING SHELL SCRIPT
+yum install httpd -y    #http installation
+systemctl start httpd
+echo "This is a demo file for httpd service "  >> /var/www/html/index.html     #creating index file to view on web server
+curl http://10.0.1.38
+systemctl status httpd  #http status
+==============================================
+copying of one file content to another file
+==============================================
+#!/bin/bash
+echo "enter the filename:  "
+read file
+mkdir /home/kiran
+touch /home/kiran/$file.sh
+echo "10
+20
+30
+40
+50
+60
+70
+80
+90
+100
+" >> /home/kiran/$file.sh
+echo "enter filename2 "
+read file2
+tail -5 /home/kiran/$file.sh >> /home/kiran/$file2
+cat /home/kiran/$file2
+====================================
+File creation
+====================================
+#!/bin/bash
+echo "enter file name: "
+read ki
+if [ -f /home/kiran/$ki ]
+then
+echo "file already exists"
+else
+touch /home/kiran/$ki
+fi
+====================================
+AND Operation
+====================================
+#AUTHOR: Saikiran
+#DATE: Wed Aug 11 09:53:08 UTC 2021
+#Greetings Hello..!
+#Welcome TO Shell Scripting
+#!/bin/bash
+echo "Enter the value of a b c: "
+read a b c
+if [ $a -gt $b -a $a -gt $c ]
+then
+echo "then a is greater"
+        elif [ $b -gt $a -a $b -gt $c ]
+        then
+        echo "B is greater"
+                elif [ $c -gt $a -a $c -gt $b ]
+                then
+                echo "C is greater"
+fi
+=====================================
+BATSMAN SCORE DISPLAY
+=======================================
+#AUTHOR: Saikiran
+#DATE: Wed Aug 11 09:53:08 UTC 2021
+#Greetings Hello..!
+#Welcome TO Shell Scripting
+#!/bin/bash
+echo "Enter the input: "
+read a
+echo "Enter the batsman score hitted: "
+read b
+if [ $b -gt 0 ]
+then
+c=$(( $a + $b ))
+echo "Batsman scored in lastball: $b"
+echo "Batsman total score is:$c "
+fi
+========================================
+FILE TRANSFER ONE PLACE TO ANOTHER
+========================================
+#AUTHOR: Saikiran
+#DATE: Wed Aug 11 09:53:08 UTC 2021
+#Greetings Hello..!
+#Welcome TO Shell Scripting
+echo "enter the file1: "
+read file1
+echo "enter the file2: "
+read file2
+if [ -d /home/kiran ]
+then
+echo "This is the content of first file" >> /home/kiran/$file1
+cat /home/kiran/$file1 >> /home/kiran/$file2
+        if [ -d /home/kiran/pe ]
+        then
+        mv /home/kiran/$file2 /home/kiran/pe/
+        else
+        echo "Invalid operation: no such file/directory"
+        fi
+else
+echo "Operation failed"
+fi
+
+
+==============================================
+Case choice
+==============================================
+
+#AUTHOR: Saikiran
+#DATE: Wed Aug 11 10:37:33 UTC 2021
+#Greetings Hello..!
+#Welcome TO Shell Scripting
+echo "1. ls"
+echo "2. free -m"
+echo "3. systemctl status httpd"
+echo "4. yum install wget -y"
+echo "enter your choice: "
+read choice
+case $choice in
+        1)
+                ls;;
+        2)
+                free -m;;
+        3)
+                systemctl status httpd;;
+        4)
+                yum install wget -y;;
+#if [ $choice -gt 4 ]
+#then
+#echo "your choice is wrong"
+#fi
+esac
+===================================================
+WHILE LOOP
+===================================================
+#AUTHOR: Saikiran
+#DATE: Wed Aug 11 11:20:36 UTC 2021
+#Greetings Hello..!
+#Welcome TO Shell Scripting
+echo "Enter the value: "
+read a
+i=0
+while [ $i -lt $a ]
+do
+echo " $i * $a = $(($i*$a))"
+i=$(($i+1))
+done
+===================================================
+EVEN NUMBERS
+===================================================
+#AUTHOR: Saikiran
+#DATE: Wed Aug 11 11:36:11 UTC 2021
+#Greetings Hello..!
+#Welcome TO Shell Scripting
+echo "enter the value: "
+read a
+i=0
+while [ $i -le $a ]
+do
+j=$(($i + 1))
+k=$(($j % 2))
+if [ $k -eq 0 ]
+then
+echo "even numbers are:$j "
+else
+echo "Odd numbers are: $j"
+fi
+i=$(($i+1))
+done
+================================================
