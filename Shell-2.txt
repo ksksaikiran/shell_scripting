@@ -1,0 +1,544 @@
+Linux link: https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/5/html/deployment_guide/s1-users-groups-standard-users
+
+
+
+
+Different types of variable:
+1. User defined variables
+2. system defined variables
+3. Special Variables
+
+User defined variables:
+The variables which are defined by user on the terminal that is called User defined variables.
+examples:
+$ x=4
+$ echo $x
+4		This is called user defined variables, it displays if and only iff you define otherwise it gives empty output
+
+System defined variables:
+The variables which are defined by Operating system inbuilt those are system defined variables and all the system defined variables are in capital letters only.
+examples:
+$ echo "$USER"
+ec2-user
+
+$ echo "$SHELL"
+/bin/bash
+These values are not defined by any user and you find all the system defined variables with command "env" or "printenv" or "set" on the terminal.
+
+Special variables
+$? - This represents the command status if it is 0 command executed properly, if command fails it throws 127 code which is an error.
+$$ – This represents the process ID number (PID) of the current shell. 
+
+$0 – This variable represents the file name of the current script.
+
+$# – This variable represents the number of the arguments which are provided to a script.
+
+$n – This variable is related to the arguments with which a script was requested. The character n here is a positive decimal number that represents the position of an argument.
+ For example, the first argument will be $1. The second argument will be $2. So on and so forth.
+
+$* – This variable represents that all the arguments are double quoted. In the case of a script receiving two arguments, S* will be analogous to $1  $2.
+
+$@ – This variable represents that all the arguments are individually double quoted. In the case of a script receiving two arguments, S@ will be analogous to $1  $2.
+
+$! – This variable represents the process number of the last background command.$? – This variable represents the exit status of the command which was executed at last
+====================================================================================================
+shell functions
+
+#!/bin/bash		        #shebang line
+Display() {		        #initialising fuction
+		read a			# reading value a
+		echo "$a"		# getting output of a
+}						
+Display					# calling the function
+
+==========================================================
+Shell program to print pid of shell and name of the current script file
+
+#!/bin/bash
+Display() {
+        echo "The pid of this shell is '$$' and name of the current script is '$0'"
+}
+Display
+=========================================================
+shell program to print the function outputs
+
+#!/bin/bash
+Display(){
+        echo "My fav fruit is '$1' and my fav game is '$2' and my phone is '$3'"   #Here we have to give numbers only 
+}
+Display mango cricket realme
+
+output: My fav fruit is 'mango' and my fav game is 'cricket' and my phone is 'realme'
+=========================================================
+To create a log file using date
+
+#!/bin/bash
+todays_date=$(date +"%Y-%m-%d")
+log_file_name=${todays_date}.log
+touch $log_file_name
+
+output= 2021-09-20.log
+=========================================================
+
+I/O commands 
+
+	echo   #output command 
+	read   # input command
+
+echo is the built-in command that is mostly used in shell scripts to displays
+	
+	- Any string/text/message
+	- Any variable value
+	- Any command output on the screen or to a file
+	
+basic syntax of a echo command is:
+	echo string/text/message
+	echo $variable
+	echo $(command)
+
+Advanced syntax of echo commands:
+	echo [options] string/$variable/$(command)
+	we have two options:
+	1. -n (This option is used to start the terminal along with printed line without starting with new line)
+	2. -e (Used to execute special/escaped characters)
+	
+example for echo -n "string":
+	# echo -n "welcome to linux"
+	welcome to linux[root@doccli ~]#
+	
+there are different types of escaped characters:
+	1. \n : This option creates a new line from where it is used
+	
+	example: echo -e "This is the first line \n This is the second line"
+			This is the first line
+			This is the second line
+	2. \b : This optin is used to remove one space back from where it is used.
+	
+	example:  echo -e "This is the first line\b This is the second line"
+			  This is the first lin This is the second line
+			  
+	3. \t : This option is used to create horizontal tab spaces.
+	
+	example: echo -e "This is the first line\tThis is the second line"
+			 This is the first line  This is the second line
+	
+	4. \r : this is used to replace the information from their places
+	
+	example: echo -e "This is the first line\r replaced to"
+			 replaced tofirst line
+			 
+	5. \v : This option is used to create vertical tab spaces
+	
+	example: echo -e "This is the\v first line \v This is the\v second line"
+			 This is the
+						first line
+								  This is the
+											 second line
+	
+	6. \a : This create a sound alert
+	
+	7. \\ : escapes or eliminates the special purpose of your escape characters.
+	
+	example: echo -e "This is the\n first line \\\n This is the second line"
+			 This is the
+			 first line \n This is the second line
+	echo -en "this is first line \n This is second line"
+	this is first line
+	This is second line[root@doccli ~]#
+	
+echo command with colours:
+
+	echo -e "\033[92m This is a colour testing line \033[0m"      #output comes in green colour
+	echo -e "\033[93m This is a colour testing line \033[0m"	  #output comes in green colour
+	
+	
+creating the status file for the httpd,
+vim status.sh
+
+#!/bin/bash
+status=$(systemctl status sshd | awk 'NR==3 { print $2 }')
+echo -e "The current state of httpd is : \033[92m$status\033[0m"
+
+chmod +x status.sh
+
+# sh status.sh
+output: The current state of httpd is : active
+
+creating status checking script file for all service:
+
+#!/bin/bash
+read -p "Enter the service name: " service
+status=$(systemctl status $service | awk 'NR==3 { print $2 }')
+echo -e "The current state of $service is : \033[92m$status\033[0m"
+
+chmod +x status.sh
+[root@doccli ~]# mv status.sh  status
+[root@doccli ~]# mv  status /usr/bin
+[root@doccli ~]# status
+Enter the service name: sshd
+The current state of sshd is : active
+
+				or we can write our script in our own wy very easily,
+				
+#!/bin/bash
+echo "systemctl status: "
+read service
+systemctl status $service
+
+chmod +x status.sh
+mv status.sh  status
+mv  status /usr/bin
+sh status.sh
+systemctl status:
+sshd
+
+● sshd.service - OpenSSH server daemon
+   Loaded: loaded (/usr/lib/systemd/system/sshd.service; enabled; vendor preset: enabled)
+   Active: active (running) since Mon 2021-09-20 08:21:15 UTC; 6h ago
+     Docs: man:sshd(8)
+           man:sshd_config(5)
+
+
+#!/bin/bash
+a=$1
+b=$2
+c=$((a+b))
+echo "addition of a and b is:" $c
+
+sh addition.sh 3 5 		# values are given directly on terminal
+addition of a and b is: 8
+
+
+CONTROL STATEMENTS
+if:
+
+#!/bin/bash
+x=4
+y=6
+z=$((x+y))
+if [ $z -eq 10 ]
+then
+echo "Statement is true the answer is:"$z
+fi
+
+#sh if.sh
+output: Statement is true the answer is:10
+
+#!/bin/bash
+a=$(systemctl status httpd.service |  awk ' NR==3 { print $2 }')
+if [ "${a}" == "inactive" ]
+then
+        echo "starting httpd.service"
+        systemctl start httpd.service
+else
+        echo "httpd.service already started"
+        systemctl status httpd.service
+fi
+
+sh httpd.sh
+output: starting httpd.service  ###IF IT IS IN DEAD State
+
+vim copy.sh
+
+#!/bin/bash
+echo
+echo "path of the source file:  "
+read location
+echo "path of the destination: "
+read destination
+if [ "${location}" != "${destination}" ]
+        then
+                cp -r $location $destination
+else
+        echo "file already exists "
+fi
+
+sh copy.sh
+output:	 path of the source file:
+		 /opt/containerd
+		 path of the destination:
+		 /root/scripts/
+
+
+#!/bin/bash
+a=$(systemctl status apache2 | awk ' NR == 3 {print $2}')
+if [ "${a}" == "start" ]
+then
+        systemctl start apache2
+else
+echo "apache is already running"
+fi
+
+we have four types of loops in sheel scripting:
+
+1. for loop
+2. while loop
+3. until loop
+4. select loop
+
+
+FOR LOOP:The for loop operate on lists of items. It repeats a set of commands for every item in a list.
+
+syntax: 
+for var in word1 word2 ...wordn
+do
+   Statement to be executed
+done
+
+vim forloop1.sh
+
+#!/bin/bash
+for each in $(seq 1 10)
+do
+echo "Welcome to shell scripting"
+done
+
+sh forloop1.sh
+
+Welcome to shell scripting
+Welcome to shell scripting
+Welcome to shell scripting
+Welcome to shell scripting
+Welcome to shell scripting
+Welcome to shell scripting
+Welcome to shell scripting
+Welcome to shell scripting
+Welcome to shell scripting
+Welcome to shell scripting
+
+
+
+#!/bin/bash
+read -p "Enter the value a: " a
+for each in $(seq 1 $a )
+do
+    echo "Name is Kiran"
+done
+
+# sh forloop2.sh
+output:  Enter the value a: 7
+Name is Kiran
+Name is Kiran
+Name is Kiran
+Name is Kiran
+Name is Kiran
+Name is Kiran
+Name is Kiran
+
+#Start of for loop
+for a in 1 2 3 4 5 6 7 8 9 10
+do
+	# if a is equal to 5 break the loop
+	if [ $a == 5 ]
+	then
+		break
+	fi
+	# Print the value
+	echo "Iteration no $a"
+done
+
+
+In for loop we use two ways to generate sequence of numbers
+	1. Using seq command
+	2. Using brace expansion
+
+seq:
+if you want to use seq command
+seq start end
+seq start step end
+
+#seq -1 9
+output: 
+-1
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+
+#seq 10 -1 1
+10
+9
+8
+7
+6
+5
+4
+3
+2
+1
+
+#seq 10 5 20
+output:
+10
+15
+20
+
+Brace expansion:
+	echo {start..end}
+	echo {start..end..step}
+	
+ # echo {1..20}
+output:  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
+ # echo {1..20..3}
+ 1 4 7 10 13 16 19
+
+while loop:
+Here command is evaluated and based on the result loop will executed, if command raise to false then loop will be terminated
+
+Syntax:
+
+while command
+do
+   Statement to be executed
+done
+
+a=0
+# -lt is less than operator
+
+#Iterate the loop until a less than 10
+while [ $a -lt 10 ]
+do
+	# Print the values
+	echo $a
+	
+	# increment the value
+	a=`expr $a + 1`
+done
+
+#!/bin/bash
+a=0
+while [ $a -lt 20 ]
+do
+echo "$a"
+a=`expr $a + 2`
+done
+
+0
+2
+4
+6
+8
+10
+12
+14
+16
+18
+
+
+until statement:
+
+The until loop is executed as many as times the condition/command evaluates to false. The loop terminates when the condition/command becomes true.
+Syntax:
+until command
+do
+   Statement to be executed until command is true
+done
+
+###########
+a=0
+# -gt is greater than operator
+#Iterate the loop until a is greater than 10
+until [ $a -gt 10 ]
+do
+	# Print the values
+	echo $a
+	
+	# increment the value
+	a=`expr $a + 1`
+done
+
+############
+
+#!/bin/bash
+a=10
+until [ $a -gt 20 ]
+do
+echo "The number is "  $a
+a=`expr  $a + 1 `
+done
+
+output:
+The number is  10
+The number is  11
+The number is  12
+The number is  13
+The number is  14
+The number is  15
+The number is  16
+The number is  17
+The number is  18
+The number is  19
+The number is  20
+
+SELECT LOOP:
+The select loop provides an easy way to create a numbered menu from which users can select options.It is used for menu driven shell script
+It is useful when you need to ask the user to choose one or more items from a list of choices.select loop with case is good combination.
+
+syntax:
+
+select <variable> in <list of items separated by space>
+do
+    ... What to do for each option or with the variable ...
+done
+
+#!/bin/bash
+echo "what do you want? "
+select OPT in  Add Sub Mul Div quit
+do
+   case $OPT in
+   Add)
+      read -p "Enter the value1: " val1
+      read -p "Enter the value2: " val2
+      echo "The result is: " $(( val1 + val2 ))
+      ;;
+
+   Sub)
+      read -p "Enter the value1: " val1
+      read -p "Enter the value2: " val2
+      echo "The result is: " $(( val1 + val2 ))
+      ;;
+   Mul)
+      read -p "Enter the value1: " val1
+      read -p "Enter the value2: " val2
+      echo "The result is: " $(( val1 * val2 ))
+      ;;
+   Div)
+      read -p "Enter the value1: " val1
+      read -p "Enter the value2: " val2
+      echo "The result is: " $(( val1 / val2 ))
+      ;;
+   *)
+      echo "Wrong option selected"
+      ;;
+   quit)
+      echo "Thankyou for using this script"
+      exit 0
+      ;;
+    esac
+done
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
