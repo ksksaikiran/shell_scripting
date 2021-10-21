@@ -1,8 +1,12 @@
+#This commented lines do manually 
+#hostnamectl set-hostname master
+#yum install vim wget curl -y
+#setenforce 0
+#sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
+#After this command reboot the PC and copy all the commands below in any.sh file and run 
+
 hostnamectl set-hostname master
-su -
 yum install vim wget curl -y
-setenforce 0
-sed -i --follow-symlinks 's/SELINUX=enforcing/SELINUX=disabled/g' /etc/sysconfig/selinux
 sudo modprobe br_netfilter
 sudo sh -c "echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables"
 sudo sh -c "echo '1' > /proc/sys/net/ipv4/ip_forward"
